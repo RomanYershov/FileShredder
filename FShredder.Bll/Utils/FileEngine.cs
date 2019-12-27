@@ -10,9 +10,9 @@ namespace FShredder.Bll.Utils
     public class FileEngine : IService
     {
         
-        public IEnumerable ShowAllFiles(string[] drives, string[] files)
+        public IEnumerable SearchFile(string[] drives, string searchValue)
         {
-            Queue<string> queue = new Queue<string>();
+            Queue<string> queue = new Queue<string>();  
             foreach (var rootDir in drives)
             {
                 queue.Enqueue(rootDir);
@@ -31,6 +31,7 @@ namespace FShredder.Bll.Utils
                     var innerFiles = Directory.GetFiles(currentDir);
                     foreach(var file in innerFiles)
                     {
+                        if(GetNameFromPath(file).ToLower().Contains(searchValue.ToLower()))
                         yield return file;
                     }
                     foreach (var nextDir in childDirectories)

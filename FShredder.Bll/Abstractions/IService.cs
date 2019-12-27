@@ -6,7 +6,7 @@ namespace FShredder.Bll.Abstractions
 {
     public interface IService
     {   
-        System.Collections.IEnumerable ShowAllFiles(string [] drives ,string [] files);
+        System.Collections.IEnumerable SearchFile(string [] drives ,string searchValue);
         void RemoveFiles(string dirPath, List<string> files);
     }
 }
