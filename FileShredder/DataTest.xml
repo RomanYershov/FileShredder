@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<content>
+  <directory name="D:\temp">
+    <ignore>
+      <file name="test — копия (3).txt"></file>
+      <file name="los — копия.txt"></file>
+    </ignore>
+  </directory>
+</content>
