@@ -20,11 +20,10 @@ namespace FileShredder
             var data =  XmlParser.Parse(xmlPath);
             if (data != null)
             {
-                var dir = data[0];
-                data.RemoveAt(0);
                 var fileEngine = new FileEngine();
+                Console.WriteLine("нажмите Enter для удаления");
                 Console.ReadKey();
-                fileEngine.RemoveFiles(dir, data);
+                fileEngine.RemoveFiles(data.DirectoryName, data.IgnoreFiles);
             }
             Console.ReadKey();
 

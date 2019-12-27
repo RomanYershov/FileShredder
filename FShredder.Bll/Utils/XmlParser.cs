@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using FShredder.Bll.Models;
 
 namespace FShredder.Bll.Utils
 {
     public class XmlParser
     {
-        public static List<string> Parse(string path)
+        public static InfoResult Parse(string path)
         {
             List<string> resultList = new List<string>();
             XmlDocument xDoc = new XmlDocument();
@@ -19,14 +20,24 @@ namespace FShredder.Bll.Utils
                 return null;
             }
 
-            xDoc.Load(path);
+            try
+            {
+                xDoc.Load(path);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+                return null;
+            }
 
             var el = xDoc.DocumentElement;
             foreach(XmlNode node in el)
             {
                 resultList.AddRange(GetAttribute(node));
             }
-            return resultList;
+            var infoResult = new InfoResult(resultList);
+
+            return infoResult;
         }
 
         private static List<string> GetAttribute(XmlNode node)
