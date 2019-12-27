@@ -45,7 +45,12 @@ namespace FShredder.Bll.Utils
         private static void WriteToFile(string message)
         {
             var dateTimeNow = DateTime.Now;
-            var path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Log_{dateTimeNow.Year}_{dateTimeNow.Month}.txt");
+           var dirLog =  System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"FileShredder.Logs");
+            if (!Directory.Exists(dirLog))
+            {
+                Directory.CreateDirectory(dirLog);
+            }
+            var path = System.IO.Path.Combine(dirLog, $"Log_{dateTimeNow.Year}_{dateTimeNow.Month}.txt");
             File.AppendAllLines(path, new [] { message });
         }
     }

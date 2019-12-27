@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -11,6 +12,13 @@ namespace FShredder.Bll.Utils
         {
             List<string> resultList = new List<string>();
             XmlDocument xDoc = new XmlDocument();
+            FileInfo fileInfo = new FileInfo(path);
+            if (!fileInfo.Exists)
+            {
+                Logger.Error($"Файл \"{fileInfo.Name}\" не существует в данном расположении.");
+                return null;
+            }
+
             xDoc.Load(path);
 
             var el = xDoc.DocumentElement;

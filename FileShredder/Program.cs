@@ -14,21 +14,19 @@ namespace FileShredder
 
         static void Main(string[] args)
         {
-            const string path = @"C:\Users\r.ershov\source\repos\FileShredder\FileShredder\DataTest.xml";
+           
+            string xmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FileShredder.xml");
 
-            var data =  XmlParser.Parse(path);
-            var dir = data[0];
-            data.RemoveAt(0);
-            var fileEngine = new FileEngine();
+            var data =  XmlParser.Parse(xmlPath);
+            if (data != null)
+            {
+                var dir = data[0];
+                data.RemoveAt(0);
+                var fileEngine = new FileEngine();
+                Console.ReadKey();
+                fileEngine.RemoveFiles(dir, data);
+            }
             Console.ReadKey();
-            fileEngine.RemoveFiles(dir, data);
-            Console.ReadKey();
-
-
-
-
-
-
 
 
 
