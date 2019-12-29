@@ -9,11 +9,12 @@ namespace FShredder.Bll.Models
     {
         public XmlInfoResult(List<string> parseResult)  
         {
-            DirectoryName = parseResult[0];
+            Info = parseResult[0];
             parseResult.RemoveAt(0);
-            IgnoreFiles = parseResult;
+            InfoList = parseResult;
         }
-        public string DirectoryName { get; }
-        public List<string> IgnoreFiles { get; }
+
+        public string Info { get; }
+        public List<string> InfoList { get; }
     }
 }

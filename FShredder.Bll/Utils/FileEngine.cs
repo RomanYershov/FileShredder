@@ -7,41 +7,14 @@ using System.IO;
 
 namespace FShredder.Bll.Utils
 {
-    public class FileEngine : IService
+    public class FileEngine : IFileService
     {
-        
-        public IEnumerable SearchFile(string[] drives, string searchValue)
+        public IEnumerable Search( ISearching searchEngine )
         {
-            Queue<string> queue = new Queue<string>();  
-            foreach (var rootDir in drives)
-            {
-                queue.Enqueue(rootDir);
-                while (queue.Count > 0)
-                {
-                    var currentDir = queue.Dequeue();
-                    string[] childDirectories;
-                    try
-                    {
-                        childDirectories = Directory.GetDirectories(currentDir);
-                    }
-                    catch(Exception ex)
-                    {
-                        continue;
-                    }
-                    var innerFiles = Directory.GetFiles(currentDir);
-                    foreach(var file in innerFiles)
-                    {
-                        if(GetNameFromPath(file).ToLower().Contains(searchValue.ToLower()))
-                        yield return file;
-                    }
-                    foreach (var nextDir in childDirectories)
-                    {
-                        queue.Enqueue(nextDir);
-                    }
-                }
-            }
-           yield return "End";
+           return searchEngine.Search();
         }
+
+
 
         public void RemoveFiles(string dirPath, List<string> ignoreFiles)
         {
@@ -73,13 +46,8 @@ namespace FShredder.Bll.Utils
         }
 
 
-        private string GetNameFromPath(string path)
-        {
-            var resArr = path.Split('\\');
-            var name = resArr[resArr.Length - 1];
-            return name;
-            
-        }
+     
+
 
       
     }

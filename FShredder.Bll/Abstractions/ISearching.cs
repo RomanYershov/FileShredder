@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
 namespace FShredder.Bll.Abstractions
 {
-    public interface IParseResult
+    public interface ISearching
     {
-        string Info { get; }
-        List<string> InfoList { get; }
+        IEnumerable Search();
     }
 }
