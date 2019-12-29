@@ -43,7 +43,7 @@ namespace FShredder.Bll.Utils
            yield return "End";
         }
 
-        public void RemoveFiles(string dirPath, List<string> files)
+        public void RemoveFiles(string dirPath, List<string> ignoreFiles)
         {
             int count = 0;
             DirectoryInfo dirInfo = new DirectoryInfo(dirPath);
@@ -57,7 +57,7 @@ namespace FShredder.Bll.Utils
             {
                 try
                 {   
-                    if(!files.Contains(file.Name.ToLower()) && file.CreationTime.Date != DateTime.Now.Date)
+                    if(!ignoreFiles.Contains(file.Name.ToLower()) && file.CreationTime.Date != DateTime.Now.Date)
                     {
                         file.Delete();
                         ++count;

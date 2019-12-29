@@ -35,11 +35,13 @@ namespace FShredder.Bll.Utils
         }
         private static void Write(Exception e)
         {
+            WriteToFile($"[{DateTime.Now}] {e.Message}");
             Console.WriteLine(e.Message);
         }
         private static void Write(string message, Exception e)
         {
-            Console.WriteLine(message);
+            WriteToFile($"[{DateTime.Now}] {message}");
+            Console.WriteLine(message, e);
         }
 
         private static void WriteToFile(string message)

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using FShredder.Bll.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace FShredder.Bll.Models
 {
-    public class InfoResult
+    public class XmlInfoResult : IParseResult
     {
-        public InfoResult(List<string> parseResult)
+        public XmlInfoResult(List<string> parseResult)  
         {
             DirectoryName = parseResult[0];
             parseResult.RemoveAt(0);
