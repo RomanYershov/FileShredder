@@ -9,18 +9,11 @@ namespace FShredder.Bll.Models
 {
    public class FileSearch : ISearching
    {
-       private readonly string [] _drives;
-       private readonly string _value;
-
-       public FileSearch(string[] drives, string value)
-       {
-           _drives = drives;
-           _value = value;
-       }
-        public IEnumerable Search()
+    
+        public IEnumerable Search(string [] directories, string searchValue)
         {
             Queue<string> queue = new Queue<string>();
-            foreach (var rootDir in _drives)
+            foreach (var rootDir in directories)
             {
                 queue.Enqueue(rootDir);
                 while (queue.Count > 0)
@@ -38,7 +31,7 @@ namespace FShredder.Bll.Models
                     var innerFiles = Directory.GetFiles(currentDir);
                     foreach (var file in innerFiles)
                     {
-                        if (GetNameFromPath(file).ToLower().Contains(_value.ToLower()))
+                        if (GetNameFromPath(file).ToLower().Contains(searchValue.ToLower()))
                             yield return file;
                     }
                     foreach (var nextDir in childDirectories)

@@ -7,6 +7,6 @@ namespace FShredder.Bll.Abstractions
 {
     public interface ISearching
     {
-        IEnumerable Search();
+        IEnumerable Search(string [] directories, string searchValue);
     }
 }

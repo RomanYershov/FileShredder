@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FShredder.Bll.EngineFactories;
 using FShredder.Bll.Utils;
 using FShredder.Bll.Models;
 
@@ -18,26 +19,26 @@ namespace FileShredder
         {
             var drives = DriveInfo.GetDrives();
             var drivesName = drives.Select(x => x.Name).ToArray();
-            var fileEngine = new FileEngine();
+            var fileEngine = new Engine(new FileEngineFactory());
 
 
-            //string xmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FileShredder.xml");
-            //var data = new XmlParser().Parse(xmlPath);
-            //if (data != null)
-            //{
-            //    Console.WriteLine("нажмите Enter для удаления");
-            //    Console.ReadKey();
+            string xmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FileShredder.xml");
+            var data = fileEngine.Parse(xmlPath);
+            if (data != null)
+            {
+                Console.WriteLine("нажмите Enter для удаления");
+                Console.ReadKey();
 
-            //    fileEngine.RemoveFiles(data.Info, data.InfoList);
-            //}
-            //Console.ReadKey();
-
-
-
+                fileEngine.RemoveFiles(data.Info, data.InfoList);
+            }
+            Console.ReadKey();
 
 
 
-            var result = fileEngine.Search(new FileSearch(drivesName, ".txt"));
+
+
+
+            var result = fileEngine.Search(drivesName, ".txt");
             foreach (var file in result)
             {
                 Console.WriteLine(file.ToString());

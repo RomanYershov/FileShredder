@@ -9,11 +9,7 @@ namespace FShredder.Bll.Utils
 {
     public class FileEngine : IFileService
     {
-        public IEnumerable Search( ISearching searchEngine )
-        {
-           return searchEngine.Search();
-        }
-
+       
 
 
         public void RemoveFiles(string dirPath, List<string> ignoreFiles)
