@@ -11,7 +11,7 @@ namespace FShredder.Bll.EngineFactories
     {
         public override ISearching CreateSearch()
         {
-            return  new FileSearch();
+            return  new TextSearch();
         }
 
         public override IFileService CreateRemove()

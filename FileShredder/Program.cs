@@ -27,9 +27,9 @@ namespace FileShredder
             if (data != null)
             {
                 Console.WriteLine("нажмите Enter для удаления");
-                Console.ReadKey();
+                //Console.ReadKey();
 
-                fileEngine.RemoveFiles(data.Info, data.InfoList);
+                //fileEngine.RemoveFiles(data.Info, data.InfoList);
             }
             Console.ReadKey();
 
@@ -38,7 +38,7 @@ namespace FileShredder
 
 
 
-            var result = fileEngine.Search(drivesName, ".txt");
+            var result = fileEngine.Search(new [] { @"D:\" }, "test");
             foreach (var file in result)
             {
                 Console.WriteLine(file.ToString());
