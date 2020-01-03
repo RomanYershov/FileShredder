@@ -27,9 +27,9 @@ namespace FileShredder
             if (data != null)
             {
                 Console.WriteLine("нажмите Enter для удаления");
-                //Console.ReadKey();
+                Console.ReadKey();
 
-                //fileEngine.RemoveFiles(data.Info, data.InfoList);
+                fileEngine.RemoveFiles(data.Info, data.InfoList);
             }
             Console.ReadKey();
 

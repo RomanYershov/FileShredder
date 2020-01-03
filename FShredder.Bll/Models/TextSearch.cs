@@ -48,7 +48,7 @@ namespace FShredder.Bll.Models
             yield return "________________________End________________________";
         }
         /// <summary>
-        /// 
+        /// Возвращает true если есть совпадения в файле с искомым текстом
         /// </summary>
         /// <param name="filePath">Полный путь к файлу</param>
         /// <param name="searchData">искомоый текст</param>
