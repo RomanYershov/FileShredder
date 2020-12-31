@@ -24,9 +24,9 @@ namespace FShredder.Bll.Models
             return _search.Search(directories, value);
         }
 
-        public void RemoveFiles(string dir, List<string> ignoreFiles)
+        public void RemoveFiles(IParseResult parseResult)
         {
-            _fService.RemoveFiles(dir,ignoreFiles);
+            _fService.RemoveFiles(parseResult);
         }
 
         public IParseResult Parse(string xmlFilePath)

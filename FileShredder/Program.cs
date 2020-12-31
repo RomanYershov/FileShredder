@@ -23,13 +23,13 @@ namespace FileShredder
 
 
             string xmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FileShredder.xml");
-            var data = fileEngine.Parse(xmlPath);
-            if (data != null)
+            var parseResult = fileEngine.Parse(xmlPath);
+            if (parseResult != null)
             {
                 Console.WriteLine("нажмите Enter для удаления");
                 Console.ReadKey();
 
-                fileEngine.RemoveFiles(data.Info, data.InfoList);
+                fileEngine.RemoveFiles(parseResult);
             }
             Console.ReadKey();
 

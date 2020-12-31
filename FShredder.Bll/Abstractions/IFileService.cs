@@ -6,6 +6,6 @@ namespace FShredder.Bll.Abstractions
 {
     public interface IFileService   
     {
-        void RemoveFiles(string dirPath, List<string> ignoreFiles);
+        void RemoveFiles(IParseResult parseResult);
     }
 }

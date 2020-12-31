@@ -10,6 +10,8 @@ namespace FShredder.Bll.Utils
 {
     public class XmlParser : IParse
     {
+        private DirectoryObject directory;
+        private List<DirectoryObject> directories = new List<DirectoryObject>();
         public  IParseResult Parse(string path)
         {
             List<string> resultList = new List<string>();
@@ -31,31 +33,52 @@ namespace FShredder.Bll.Utils
                 return null;
             }
 
-            var el = xDoc.DocumentElement;
+            XmlElement el = xDoc.DocumentElement;
             foreach(XmlNode node in el)
             {
-                resultList.AddRange(GetAttribute(node));
+                GetAttribute(node);
             }
-            var infoResult = new XmlInfoResult(resultList);
+            var infoResult = new XmlInfoResult(directories);
 
             return infoResult;
         }
 
-        private  List<string> GetAttribute(XmlNode node)
+        private IEnumerable<DirectoryObject> GetAttribute(XmlNode node)
         {
             List<string> result = new List<string>();
-            if(node.Attributes.Count > 0)
+            if(node.Attributes?.Count > 0)
             {
                 foreach(XmlAttribute attr in node.Attributes)
                 {
+                    if (node.Name == "directory")
+                    {
+                        directory = new DirectoryObject(attr.Value);
+                        directories.Add(directory);
+                    }
                     result.Add(attr.Value.ToLower());
                 }
             }
             foreach(XmlNode childNode in node.ChildNodes)
             {
-               result.AddRange(GetAttribute(childNode));
+                if (childNode.Attributes?.Count > 0)
+                {
+                    FileObject file = new FileObject();
+                    foreach (XmlAttribute attr in childNode.Attributes)
+                    {
+                        switch (attr.Name)
+                        {
+                            case "name": file.Name = attr.Value;break;
+                            case "mask": file.Attributes.Mask = attr.Value;break;
+                            case "datefrom": file.Attributes.DateFrom = !string.IsNullOrEmpty(attr.Value) ? Convert.ToDateTime(attr.Value) : default(DateTime);break;
+                        }
+                    }
+                    directory.Files.Add(file);
+                }
+
+                if (childNode.Name != "file")
+                    GetAttribute(childNode);
             }
-            return result;
+            return directories;
         }
     }
 }

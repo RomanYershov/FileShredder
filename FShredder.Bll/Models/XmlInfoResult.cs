@@ -7,14 +7,12 @@ namespace FShredder.Bll.Models
 {
     public class XmlInfoResult : IParseResult
     {
-        public XmlInfoResult(List<string> parseResult)  
-        {
-            Info = parseResult[0];
-            parseResult.RemoveAt(0);
-            InfoList = parseResult;
-        }
+        public List<DirectoryObject> Directories { get; }
 
-        public string Info { get; }
-        public List<string> InfoList { get; }
+        public XmlInfoResult()
+        {
+            
+        }
+        public XmlInfoResult(List<DirectoryObject> directories) => Directories = directories;
     }
 }

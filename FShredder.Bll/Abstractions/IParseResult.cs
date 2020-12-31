@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FShredder.Bll.Models;
 
 namespace FShredder.Bll.Abstractions
 {
     public interface IParseResult
     {
-        string Info { get; }
-        List<string> InfoList { get; }
+        List<DirectoryObject> Directories { get; }
     }
 }
