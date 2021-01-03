@@ -29,15 +29,17 @@ namespace FShredder.Bll.Utils
                     {
                         if (!string.IsNullOrEmpty(fileObject.Attributes.Mask))
                         {
-                            Regex regex = new Regex("^" + fileObject.Attributes.Mask + "$");
+                            Regex regex = new Regex(fileObject.Attributes.Mask);
                             foreach (var f in innerFiles)
                             {
                                 var result = regex.Match(f.Name);
-                                if (result.Success 
-                                    || !f.Name.Contains(fileObject.Name)
-                                    || (fileObject.Attributes.DateFrom != null && fileObject.Attributes.DateFrom.GetValueOrDefault().Date <= f.CreationTime.Date)) continue;
+                                if(f.Name == fileObject.Name)continue;
+                                if (!result.Success) continue;
                                 f.Delete();
                                 ++count;
+                                //if (result.Success 
+                                //    || !f.Name.Contains(fileObject.Name)
+                                //    || (fileObject.Attributes.DateFrom != null && fileObject.Attributes.DateFrom.GetValueOrDefault().Date <= f.CreationTime.Date)) continue;
                             }
                         }
                     }
