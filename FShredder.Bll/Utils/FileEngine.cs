@@ -25,20 +25,33 @@ namespace FShredder.Bll.Utils
                 var innerFiles = dirInfo.GetFiles();
                 foreach (var fileObject in dir.Files)
                 {
-                    if (!string.IsNullOrEmpty(fileObject.Attributes.Mask))
+                    if (fileObject.Attributes.IsIgnore)
                     {
-                        Regex regex = new Regex("^" + fileObject.Attributes.Mask + "$");
-                        foreach (var f in innerFiles)
+                        if (!string.IsNullOrEmpty(fileObject.Attributes.Mask))
                         {
-                            var result = regex.Match(f.Name);
-                            if (!result.Success)
+                            Regex regex = new Regex("^" + fileObject.Attributes.Mask + "$");
+                            foreach (var f in innerFiles)
                             {
+                                var result = regex.Match(f.Name);
+                                if (result.Success 
+                                    || !f.Name.Contains(fileObject.Name)
+                                    || (fileObject.Attributes.DateFrom != null && fileObject.Attributes.DateFrom.GetValueOrDefault().Date <= f.CreationTime.Date)) continue;
                                 f.Delete();
                                 ++count;
                             }
                         }
-                        
-                       
+                    }
+                    else
+                    {
+                        foreach (var file in innerFiles)
+                        {
+                            if (fileObject.Name == file.Name && (fileObject.Attributes.DateFrom.GetValueOrDefault().Date > file.CreationTime.Date 
+                                                                 || fileObject.Attributes.DateFrom == null ))
+                            {
+                                file.Delete();
+                                ++count;
+                            }
+                        }
                     }
                 }
                 foreach (var file in innerFiles)

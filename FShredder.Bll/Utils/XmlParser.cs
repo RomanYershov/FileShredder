@@ -12,7 +12,7 @@ namespace FShredder.Bll.Utils
     {
         private DirectoryObject directory;
         private List<DirectoryObject> directories = new List<DirectoryObject>();
-        public  IParseResult Parse(string path)
+        public IParseResult Parse(string path)
         {
             List<string> resultList = new List<string>();
             XmlDocument xDoc = new XmlDocument();
@@ -34,7 +34,7 @@ namespace FShredder.Bll.Utils
             }
 
             XmlElement el = xDoc.DocumentElement;
-            foreach(XmlNode node in el)
+            foreach (XmlNode node in el)
             {
                 GetAttribute(node);
             }
@@ -46,9 +46,9 @@ namespace FShredder.Bll.Utils
         private IEnumerable<DirectoryObject> GetAttribute(XmlNode node)
         {
             List<string> result = new List<string>();
-            if(node.Attributes?.Count > 0)
+            if (node.Attributes?.Count > 0)
             {
-                foreach(XmlAttribute attr in node.Attributes)
+                foreach (XmlAttribute attr in node.Attributes)
                 {
                     if (node.Name == "directory")
                     {
@@ -58,18 +58,22 @@ namespace FShredder.Bll.Utils
                     result.Add(attr.Value.ToLower());
                 }
             }
-            foreach(XmlNode childNode in node.ChildNodes)
+            foreach (XmlNode childNode in node.ChildNodes)
             {
                 if (childNode.Attributes?.Count > 0)
                 {
                     FileObject file = new FileObject();
                     foreach (XmlAttribute attr in childNode.Attributes)
                     {
+
                         switch (attr.Name)
                         {
-                            case "name": file.Name = attr.Value;break;
-                            case "mask": file.Attributes.Mask = attr.Value;break;
-                            case "datefrom": file.Attributes.DateFrom = !string.IsNullOrEmpty(attr.Value) ? Convert.ToDateTime(attr.Value) : default(DateTime);break;
+                            case "name": file.Name = attr.Value; break;
+                            case "ignore":
+                                bool.TryParse(attr.Value, out var ignor);
+                                file.Attributes.IsIgnore = ignor; break;
+                            case "mask": file.Attributes.Mask = attr.Value; break;
+                            case "datefrom": file.Attributes.DateFrom = !string.IsNullOrEmpty(attr.Value) ? Convert.ToDateTime(attr.Value) : default(DateTime); break;
                         }
                     }
                     directory.Files.Add(file);

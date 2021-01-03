@@ -30,6 +30,7 @@ namespace FShredder.Bll.Models
 
     public class AttributeObject
     {
+        public bool IsIgnore { get; set; }  
         public string Mask { get; set; }
         public DateTime? DateFrom { get; set; }
     }
