@@ -10,11 +10,11 @@ namespace FShredder.Bll.Utils
 {
     public class XmlParser : IParse
     {
-        private DirectoryObject directory;
-        private List<DirectoryObject> directories = new List<DirectoryObject>();
+        private DirectoryObject _directory;
+        private readonly List<DirectoryObject> _directories;
+        public XmlParser() => _directories = new List<DirectoryObject>();
         public IParseResult Parse(string path)
         {
-            List<string> resultList = new List<string>();
             XmlDocument xDoc = new XmlDocument();
             FileInfo fileInfo = new FileInfo(path);
             if (!fileInfo.Exists)
@@ -38,34 +38,33 @@ namespace FShredder.Bll.Utils
             {
                 GetAttribute(node);
             }
-            var infoResult = new XmlInfoResult(directories);
+            var infoResult = new XmlInfoResult(_directories);
 
             return infoResult;
         }
 
         private IEnumerable<DirectoryObject> GetAttribute(XmlNode node)
         {
-            List<string> result = new List<string>();
             if (node.Attributes?.Count > 0)
             {
                 foreach (XmlAttribute attr in node.Attributes)
                 {
                     if (node.Name == "directory")
                     {
-                        directory = new DirectoryObject(attr.Value);
-                        directories.Add(directory);
+                        _directory = new DirectoryObject(attr.Value);
+                        _directories.Add(_directory);
                     }
-                    result.Add(attr.Value.ToLower());
                 }
             }
             foreach (XmlNode childNode in node.ChildNodes)
             {
+                FileObject file = new FileObject();
+                if (node.Name == "ignore")
+                    file.Attributes.IsIgnore = true;
                 if (childNode.Attributes?.Count > 0)
                 {
-                    FileObject file = new FileObject();
                     foreach (XmlAttribute attr in childNode.Attributes)
                     {
-
                         switch (attr.Name)
                         {
                             case "name": file.Name = attr.Value; break;
@@ -76,13 +75,13 @@ namespace FShredder.Bll.Utils
                             case "datefrom": file.Attributes.DateFrom = !string.IsNullOrEmpty(attr.Value) ? Convert.ToDateTime(attr.Value) : default(DateTime); break;
                         }
                     }
-                    directory.Files.Add(file);
+                    _directory.Files.Add(file);
                 }
 
                 if (childNode.Name != "file")
                     GetAttribute(childNode);
             }
-            return directories;
+            return _directories;
         }
     }
 }

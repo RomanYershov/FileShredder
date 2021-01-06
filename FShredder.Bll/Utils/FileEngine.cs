@@ -25,21 +25,19 @@ namespace FShredder.Bll.Utils
                 var innerFiles = dirInfo.GetFiles();
                 foreach (var fileObject in dir.Files)
                 {
+                    //var ignoreFiles = dir.Files.Where(f => f.Attributes.IsIgnore).Select(f => f.Name);
                     if (fileObject.Attributes.IsIgnore)
                     {
-                        if (!string.IsNullOrEmpty(fileObject.Attributes.Mask))
+                        var fName = GetFileName(fileObject.Name);
+                        Regex regex = new Regex(GetPattern(fileObject.Name));
+                        foreach (var f in innerFiles)
                         {
-                            Regex regex = new Regex(fileObject.Attributes.Mask);
-                            foreach (var f in innerFiles)
+                            var result = regex.Match(f.Name);
+                            if (result.Success && f.Name != fName && (fileObject.Attributes.DateFrom == null ||
+                                                fileObject.Attributes.DateFrom.GetValueOrDefault().Date <= f.CreationTime.Date))
                             {
-                                var result = regex.Match(f.Name);
-                                if(f.Name == fileObject.Name)continue;
-                                if (!result.Success) continue;
                                 f.Delete();
                                 ++count;
-                                //if (result.Success 
-                                //    || !f.Name.Contains(fileObject.Name)
-                                //    || (fileObject.Attributes.DateFrom != null && fileObject.Attributes.DateFrom.GetValueOrDefault().Date <= f.CreationTime.Date)) continue;
                             }
                         }
                     }
@@ -47,8 +45,8 @@ namespace FShredder.Bll.Utils
                     {
                         foreach (var file in innerFiles)
                         {
-                            if (fileObject.Name == file.Name && (fileObject.Attributes.DateFrom.GetValueOrDefault().Date > file.CreationTime.Date 
-                                                                 || fileObject.Attributes.DateFrom == null ))
+                            if (fileObject.Name == file.Name && (fileObject.Attributes.DateFrom.GetValueOrDefault().Date <= file.CreationTime.Date
+                                                                 || fileObject.Attributes.DateFrom == null))
                             {
                                 file.Delete();
                                 ++count;
@@ -56,62 +54,30 @@ namespace FShredder.Bll.Utils
                         }
                     }
                 }
-                foreach (var file in innerFiles)
-                {
-                    try
-                    {
-                      
-                        //var ignorFiles = dir.Files.Select(x => x.Name);
-                        //if (!ignorFiles.Contains(file.Name)) //&& file.CreationTime.Date > fileObject.Attributes.DateFrom.GetValueOrDefault().Date) 
-                        //{
-                        //    file.Delete();
-                        //    ++count;
-                        //}
-
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error($"Ошибка удалениея файла {file.Name}", ex);
-                        continue;
-                    }
-                }
             }
-           
+
             Logger.Info($"Всего удалено ({count}) файлов");
         }
-        public void RemoveFiles(string dirPath, List<string> ignoreFiles)
+
+        private string GetPattern(string fileName)
         {
-            int count = 0;
-            DirectoryInfo dirInfo = new DirectoryInfo(dirPath);
-            if(!dirInfo.Exists)
-            {
-                Logger.Error($"Дириктороии \"{dirInfo.Name}\" не существует в данном расположении.");
-                return;
-            }
-            var innerFiles = dirInfo.GetFiles();
-            foreach(var file in innerFiles)
-            {
-                try
-                {   
-                    if(!ignoreFiles.Contains(file.Name.ToLower()) && file.CreationTime.Date != DateTime.Now.Date)
-                    {
-                        file.Delete();
-                        ++count;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error($"Ошибка удалениея файла {file.Name}",ex);
-                    continue;
-                }
-            }
-            Logger.Info($"Всего удалено ({count}) файлов") ;
+            if (fileName.Contains("?*"))
+                return $"^{fileName.Replace('*', ' ').TrimEnd()}.*";
+            return fileName;
         }
 
+        private string GetFileName(string fileName)
+        {
+            var regex = new Regex("\\w*");
+            var res = regex.Matches(fileName);
+            return $"{res[0].Value}.{res[2].Value}";
+        }
+       
 
-     
 
 
-      
+
+
+
     }
 }
